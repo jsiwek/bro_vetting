@@ -12,14 +12,14 @@ type Idx: record {
 };
 
 event bro_init() &priority=5
-    {
-    Input::add_table([$source=host_whitelist_filename, $mode=Input::REREAD,
-                      $name=input_handle, $idx=Idx,
-                      $destination=host_whitelist]);
-    }
+	{
+	Input::add_table([$source=host_whitelist_filename, $mode=Input::REREAD,
+	                  $name=input_handle, $idx=Idx,
+	                  $destination=host_whitelist]);
+	}
 
 event Input::end_of_data(name: string, source: string) &priority=5
-    {
+	{
 	if ( name == input_handle )
 		whitelist_ready = T;
-    }
+		}

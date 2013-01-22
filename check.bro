@@ -23,7 +23,7 @@ event Vetting::check_host(host: addr) &priority=5
 	else if ( host !in Vetting::host_whitelist )
 		{
 		local msg = fmt("New host, %s, not in vetting whitelist %s",
-						host, Vetting::host_whitelist_filename);
+		                host, Vetting::host_whitelist_filename);
 		NOTICE([$note=Unvetted_Host, $msg=msg, $identifer=fmt("%s", host)]);
 		}
 	}
