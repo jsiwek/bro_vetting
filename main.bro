@@ -41,5 +41,5 @@ export {
 
 	## Raised when activity for a host in :bro:see:`Vetting::subnets` can be
 	## checked against :bro:see:`Vetting::host_whitelist`.
-	global check_host: event(host: addr);
+	global check_host: event(host: addr, cid: conn_id, uid: string);
 }

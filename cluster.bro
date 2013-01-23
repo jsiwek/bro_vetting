@@ -13,4 +13,6 @@ redef Cluster::worker2manager_events += /^Vetting::check_host$/;
 @load ./check
 @endif
 
+@if ( Cluster::local_node_type() == Cluster::WORKER )
 @load ./monitor
+@endif
