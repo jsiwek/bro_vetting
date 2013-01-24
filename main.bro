@@ -15,6 +15,18 @@ export {
 		Unvetted_Host
 	};
 
+	## The vetting_hosts logging stream identifier, which tracks activity
+	## of vetted hosts (those that are in the whitelist).
+	redef enum Log::ID += { HOSTS_LOG };
+
+	## Record type which contains column fields of vetting_hosts log.
+	type Info: record {
+		## The timestamp at which activity of a vetted host was detected.
+		ts:   time &log;
+		## The vetted host's IP address.
+		host: addr &log;
+	};
+
 	## The set of subnets that are supposed to be vetted.
 	const subnets: set[subnet] &redef;
 
@@ -42,4 +54,14 @@ export {
 	## Raised when activity for a host in :bro:see:`Vetting::subnets` can be
 	## checked against :bro:see:`Vetting::host_whitelist`.
 	global check_host: event(host: addr, cid: conn_id, uid: string);
+
+	## An event that can be handled to access the :bro:type:`Vetting::Info`
+	## record as it is sent on to the logging framework.
+	global log_vetted_hosts: event(rec: Info);
 }
+
+event bro_init()
+	{
+	Log::create_stream(Vetting::HOSTS_LOG,
+	                   [$columns=Info, $ev=log_vetted_hosts]);
+	}

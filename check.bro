@@ -1,11 +1,13 @@
-##! Handles the checking of whether a host is within a whitelist and raises
-##! a notice if it's not.
+##! Handles the checking of whether a host is within a whitelist.  If it is,
+##! the activity is logged.  If it is not, a notice is raised.
 
 @load base/frameworks/notice
 
 @load ./main
 
 module Vetting;
+
+global logged_hosts: set[addr] &create_expire=Vetting::check_interval;
 
 event Vetting::re_check_host(host: addr, cid: conn_id, uid: string)
 	{
@@ -27,5 +29,10 @@ event Vetting::check_host(host: addr, cid: conn_id, uid: string) &priority=5
 		NOTICE([$note=Unvetted_Host, $msg=msg, $uid=uid, $id=cid,
 		        $identifier=fmt("%s", host),
 		        $suppress_for=Vetting::check_interval]);
+		}
+	else if ( host !in logged_hosts )
+		{
+		add logged_hosts[host];
+		Log::write(Vetting::HOSTS_LOG, [$ts=network_time(), $host=host]);
 		}
 	}
