@@ -25,6 +25,7 @@ event Vetting::check_host(host: addr, cid: conn_id, uid: string) &priority=5
 		local msg = fmt("New host, %s, not in vetting whitelist %s",
 		                host, Vetting::host_whitelist_filename);
 		NOTICE([$note=Unvetted_Host, $msg=msg, $uid=uid, $id=cid,
-		        $identifier=fmt("%s", host)]);
+		        $identifier=fmt("%s", host),
+		        $suppress_for=Vetting::check_interval]);
 		}
 	}
