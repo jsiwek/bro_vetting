@@ -22,4 +22,4 @@ event Input::end_of_data(name: string, source: string) &priority=5
 	{
 	if ( name == input_handle )
 		whitelist_ready = T;
-		}
+	}
