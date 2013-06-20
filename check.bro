@@ -12,7 +12,7 @@ global logged_hosts: set[addr] &create_expire=Vetting::check_interval;
 event Vetting::re_check_host(host: addr, cid: conn_id, uid: string)
 	{
 	if ( ! Vetting::whitelist_ready )
-		Reporter::fatal(fmt("Failed to ready vetted host whitelist from %s",
+		Reporter::fatal(fmt("Failed to read vetted host whitelist from %s",
 		                    Vetting::host_whitelist_filename));
 	else
 		event check_host(host, cid, uid);
