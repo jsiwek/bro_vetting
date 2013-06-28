@@ -44,22 +44,35 @@ event bro_init()
 
 global eod_count = 0;
 
-event Input::end_of_data(name: string, source: string)
+function collect()
 	{
 	++eod_count;
-	if ( eod_count == 2 )
-		{
-		local stale_hosts = vetted_hosts;
 
-		for ( [t, h] in active_hosts )
-			delete stale_hosts[h];
+	if ( eod_count != 2 )
+		return;
 
-		local f = open("stale_whitelist.txt");
-		print f, "host";
-		for ( h in stale_hosts )
-			print f, h;
-		close(f);
+	local stale_hosts = vetted_hosts;
 
-		terminate();
-		}
+	for ( [t, h] in active_hosts )
+		delete stale_hosts[h];
+
+	local f = open("stale_whitelist.txt");
+	print f, "host";
+	for ( h in stale_hosts )
+		print f, h;
+	close(f);
+
+	terminate();
+	}
+
+# This event was renamed to Input::end_of_data after 2.1, it's only here for
+# compatibility purposes.
+event Input::update_finished(name: string, source: string)
+	{
+	collect();
+	}
+
+event Input::end_of_data(name: string, source: string)
+	{
+	collect();
 	}
